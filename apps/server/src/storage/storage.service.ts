@@ -3,6 +3,7 @@ import {
   DeleteObjectCommand,
   GetObjectCommand,
   HeadBucketCommand,
+  PutBucketCorsCommand,
   PutObjectCommand,
   S3Client,
 } from '@aws-sdk/client-s3';
@@ -44,6 +45,7 @@ export class StorageService implements OnModuleInit {
 
   async onModuleInit(): Promise<void> {
     await this.ensureBucket();
+    await this.ensureCors();
 
     const endpoint = this.config.get<string>('S3_ENDPOINT');
     const publicEndpoint = this.config.get<string>('S3_PUBLIC_ENDPOINT');
@@ -53,6 +55,40 @@ export class StorageService implements OnModuleInit {
           ? `, публічна адреса для посилань: ${publicEndpoint}`
           : ''),
     );
+  }
+
+  private async ensureCors(): Promise<void> {
+    const origins = (this.config.get<string>('CORS_ORIGINS') ?? '')
+      .split(',')
+      .map((origin) => origin.trim())
+      .filter((origin) => origin.startsWith('http'));
+
+    if (origins.length === 0) return;
+
+    try {
+      await this.client.send(
+        new PutBucketCorsCommand({
+          Bucket: this.bucket,
+          CORSConfiguration: {
+            CORSRules: [
+              {
+                AllowedOrigins: origins,
+                AllowedMethods: ['GET', 'HEAD'],
+                AllowedHeaders: ['*'],
+                ExposeHeaders: ['Content-Length', 'Content-Type'],
+                MaxAgeSeconds: 3000,
+              },
+            ],
+          },
+        }),
+      );
+      this.logger.log(`Сховище дозволяє читання з: ${origins.join(', ')}`);
+    } catch (error) {
+      this.logger.warn(
+        `Не вдалося налаштувати CORS на сховищі: ${String(error)}. ` +
+          'Синхронізація у вебверсії може не читати файли.',
+      );
+    }
   }
 
   private async ensureBucket(): Promise<void> {
