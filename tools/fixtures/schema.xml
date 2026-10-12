@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Файл типу .xml проходить ФІЛЬТР варіанту 41 і показується як текст -->
+<drive xmlns="urn:drive:schema:1.0" version="1.0">
+  <owner email="olena@example.com" displayName="Олена Тимченко"/>
+  <files>
+    <file path="src/Program.cs"     ext=".cs"  size="847"   preview="text"/>
+    <file path="src/FileService.cs" ext=".cs"  size="1024"  preview="text"/>
+    <file path="docs/schema.xml"    ext=".xml" size="612"   preview="text"/>
+    <file path="images/photo.jpg"   ext=".jpg" size="12480" preview="image"/>
+    <file path="images/icon.png"    ext=".png" size="3072"  preview="image"/>
+  </files>
+  <variant number="41">
+    <types>.cs, .jpg</types>
+    <operation>сортування за датою створення; фільтр .xml, .png</operation>
+  </variant>
+</drive>

@@ -1,0 +1,84 @@
+html, body { height: 100%; }
+
+.wb-shell {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.wb-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 18px;
+  background: var(--dr-surface);
+  border-bottom: 1px solid var(--dr-border);
+}
+.wb-header__title { margin: 0; font-size: 15px; font-weight: 600; }
+.wb-header__badge {
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: #fef3c7;
+  color: #b45309;
+  font-size: 11px;
+  font-weight: 600;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) .wb-header__badge { background: #35260c; color: #fbbf24; }
+}
+.wb-header__spacer { flex: 1; }
+.wb-header__user { color: var(--dr-muted); font-size: 13px; }
+
+.wb-body { display: flex; flex: 1; min-height: 0; }
+.wb-main { display: flex; flex-direction: column; flex: 1; min-width: 0; }
+
+.wb-limits {
+  padding: 10px 18px;
+  background: var(--dr-bg);
+  border-bottom: 1px solid var(--dr-border);
+  font-size: 13px;
+  color: var(--dr-muted);
+}
+.wb-limits strong { color: var(--dr-text); }
+.wb-limits__row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+
+.wb-banner {
+  padding: 9px 18px;
+  font-size: 13px;
+  background: var(--dr-accent-soft);
+  color: var(--dr-accent);
+  border-bottom: 1px solid var(--dr-border);
+}
+.wb-banner.is-error {
+  background: color-mix(in srgb, var(--dr-danger) 12%, transparent);
+  color: var(--dr-danger);
+}
+
+.wb-progress {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 9px 18px;
+  background: var(--dr-accent-soft);
+  border-bottom: 1px solid var(--dr-border);
+  font-size: 13px;
+  color: var(--dr-accent);
+}
+.wb-progress__label { white-space: nowrap; }
+.wb-progress__track {
+  flex: 1;
+  height: 6px;
+  border-radius: 3px;
+  background: var(--dr-border);
+  overflow: hidden;
+}
+.wb-progress__bar {
+  display: block;
+  height: 100%;
+  border-radius: 3px;
+  background: var(--dr-accent);
+  transition: width 0.15s linear;
+}
+
+.wb-fileinput { display: none; }

@@ -1,0 +1,104 @@
+
+@host = http://localhost:3002/api
+@email = olena@example.com
+@password = superSecret123
+
+### АВТОРИЗАЦІЯ
+
+# @name register
+POST {{host}}/auth/register
+Content-Type: application/json
+
+{ "email": "{{email}}", "password": "{{password}}", "displayName": "Олена Тимченко" }
+
+###
+# @name login
+POST {{host}}/auth/login
+Content-Type: application/json
+
+{ "email": "{{email}}", "password": "{{password}}" }
+
+@token = {{login.response.body.accessToken}}
+
+###
+GET {{host}}/auth/me
+Authorization: Bearer {{token}}
+
+### ІНДИВІДУАЛЬНА ОПЕРАЦІЯ (варіант 41)
+
+### Сортування за датою створення — ЗРОСТАННЯ
+GET {{host}}/files?sort=createdAt&order=asc
+Authorization: Bearer {{token}}
+
+### Сортування за датою створення — СПАДАННЯ
+GET {{host}}/files?sort=createdAt&order=desc
+Authorization: Bearer {{token}}
+
+### Фільтр: лише .xml та .png
+GET {{host}}/files?filter=variant&order=desc
+Authorization: Bearer {{token}}
+
+### Фільтр: усі файли
+GET {{host}}/files?filter=all&order=desc
+Authorization: Bearer {{token}}
+
+### ФАЙЛОВІ ОПЕРАЦІЇ
+
+### Завантаження на сервер
+POST {{host}}/files
+Authorization: Bearer {{token}}
+Content-Type: multipart/form-data; boundary=----X
+
+------X
+Content-Disposition: form-data; name="path"
+
+src/Program.cs
+------X
+Content-Disposition: form-data; name="file"; filename="Program.cs"
+Content-Type: text/x-csharp
+
+using System;
+class Program { static void Main() => Console.WriteLine("Привіт"); }
+------X--
+
+### Прев'ю (.cs та .xml → текст, .jpg та .png → posилання на зображення)
+GET {{host}}/files/{{fileId}}/preview
+Authorization: Bearer {{token}}
+
+### Посилання на вивантаження
+GET {{host}}/files/{{fileId}}/download
+Authorization: Bearer {{token}}
+
+### Перейменування
+PATCH {{host}}/files/{{fileId}}
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "path": "src/Renamed.cs" }
+
+### Видалення
+DELETE {{host}}/files/{{fileId}}
+Authorization: Bearer {{token}}
+
+### СИНХРОНІЗАЦІЯ
+
+### Віддалений маніфест
+GET {{host}}/files/manifest
+Authorization: Bearer {{token}}
+
+### План синхронізації
+POST {{host}}/sync/diff
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "local": [
+    { "path": "photo.jpg",      "contentHash": "той-самий" },
+    { "path": "icon.png",       "contentHash": "змінений-локально" },
+    { "path": "нове/звіт.xml",  "contentHash": "новий-файл" }
+  ],
+  "index": [
+    { "path": "photo.jpg", "contentHash": "той-самий",   "remoteId": "..." },
+    { "path": "icon.png",  "contentHash": "базовий-хеш", "remoteId": "..." }
+  ]
+}

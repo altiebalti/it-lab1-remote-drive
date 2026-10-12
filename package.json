@@ -1,0 +1,27 @@
+{
+  "name": "drive-module1",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Клієнт для взаємодії з віддаленою папкою. Модуль 1, система типу 2, варіант 41",
+  "scripts": {
+    "infra:up": "docker compose up -d",
+    "infra:down": "docker compose down",
+    "infra:reset": "docker compose down -v && docker compose up -d",
+    "server:dev": "pnpm --filter @drive/server start:dev",
+    "packages:build": "pnpm --filter @drive/core --filter @drive/api-client --filter @drive/ui build",
+    "desktop:dev": "pnpm --filter @drive/desktop dev",
+    "build": "pnpm packages:build && pnpm --filter @drive/server build && pnpm --filter @drive/desktop build && pnpm --filter @drive/web build",
+    "web:dev": "pnpm --filter @drive/web dev",
+    "test": "pnpm --filter @drive/core test"
+  },
+  "packageManager": "pnpm@10.33.0",
+  "engines": {
+    "node": ">=20"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "electron",
+      "esbuild"
+    ]
+  }
+}

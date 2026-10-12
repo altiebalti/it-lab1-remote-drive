@@ -1,0 +1,12 @@
+**/node_modules
+**/dist
+**/dist-electron
+**/.next
+**/.turbo
+.git
+.demo-sync
+docs
+tools/uml/plantuml.jar
+**/*.log
+.env
+.DS_Store
