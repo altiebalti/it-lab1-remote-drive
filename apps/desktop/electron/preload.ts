@@ -36,6 +36,7 @@ const desktopApi = {
     ipcRenderer.invoke('file:delete', root, path),
 
   pickFiles: (): Promise<string[]> => ipcRenderer.invoke('file:pick'),
+  fetchUrl: (url: string): Promise<Uint8Array> => ipcRenderer.invoke('url:fetch', url),
   readAbsolute: (
     absolutePath: string,
   ): Promise<{ name: string; bytes: Uint8Array }> =>

@@ -152,6 +152,11 @@ export function useSync(onChanged: () => void) {
   return { state, chooseFolder, preview, run, toggleWatching };
 }
 
+async function downloadViaMain(remoteId: string): Promise<Uint8Array> {
+  const url = await client.downloadUrl(remoteId);
+  return window.desktop.fetchUrl(url);
+}
+
 async function apply(root: string, action: SyncAction): Promise<void> {
   switch (action.type) {
     case 'upload': {
@@ -161,7 +166,7 @@ async function apply(root: string, action: SyncAction): Promise<void> {
     }
 
     case 'download': {
-      const bytes = await client.downloadBytes(action.remoteId);
+      const bytes = await downloadViaMain(action.remoteId);
       await window.desktop.writeFile(root, action.path, bytes);
       return;
     }
@@ -179,7 +184,7 @@ async function apply(root: string, action: SyncAction): Promise<void> {
 
     case 'conflict': {
 
-      const remoteBytes = await client.downloadBytes(action.remoteId);
+      const remoteBytes = await downloadViaMain(action.remoteId);
       const copyPath = conflictCopyPath(action.path);
       await window.desktop.writeFile(root, copyPath, remoteBytes);
 

@@ -164,6 +164,14 @@ ipcMain.handle('file:readAbsolute', async (_event, absolutePath: string) => {
   };
 });
 
+ipcMain.handle('url:fetch', async (_event, url: string): Promise<Uint8Array> => {
+  const response = await net.fetch(url);
+  if (!response.ok) {
+    throw new Error(`Сховище відповіло ${response.status}`);
+  }
+  return new Uint8Array(await response.arrayBuffer());
+});
+
 ipcMain.handle('file:pick', async (): Promise<string[]> => {
   const result = await dialog.showOpenDialog({
     title: 'Виберіть файли для завантаження',
